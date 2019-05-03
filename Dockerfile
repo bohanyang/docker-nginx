@@ -10,10 +10,10 @@ RUN set -ex; \
 
 RUN set -ex; \
     apk add --no-cache \
-        openssl \
         ca-certificates \
     ; \
     apk add --no-cache --virtual .build-deps \
+        openssl \
         curl \
         gcc \
         libc-dev \
