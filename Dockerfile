@@ -32,8 +32,6 @@ RUN set -ex; \
 RUN set -ex; \
   # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon
   deluser xfs; \
-  # delete the existing www-data user (uid 82)
-  deluser www-data; \
   # create a new user and its group www-data with uid 33
   addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data
 
