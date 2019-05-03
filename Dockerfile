@@ -3,6 +3,12 @@ FROM nginx:1.15.12-alpine
 ARG NGX_BROTLI_VERSION=8104036af9cff4b1d34f22d00ba857e2a93a243c
 
 RUN set -ex; \
+    # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon
+    deluser xfs; \
+    # create a new user and its group www-data with uid 33
+    addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data
+
+RUN set -ex; \
     apk add --no-cache \
         openssl \
         ca-certificates \
@@ -30,12 +36,6 @@ RUN set -ex; \
     cd ..; \
     rm -rf ngx_brotli "nginx-$NGINX_VERSION"; \
     apk del .build-deps
-
-RUN set -ex; \
-    # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon
-    deluser xfs; \
-    # create a new user and its group www-data with uid 33
-    addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data
 
 COPY docker-nginx-*.sh docker-entrypoint.sh /usr/local/bin/
 
