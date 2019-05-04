@@ -5,8 +5,10 @@ ARG NGX_BROTLI_VERSION=8104036af9cff4b1d34f22d00ba857e2a93a243c
 RUN set -ex; \
     # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon
     deluser xfs; \
-    # delete the existing www-data user (uid 82)
-    deluser www-data; \
+    # delete the existing nginx user
+    deluser nginx; \
+    # delete the existing www-data group (uid 82)
+    delgroup www-data; \
     # create a new user and its group www-data with uid 33
     addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data
 
