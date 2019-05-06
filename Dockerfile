@@ -1,4 +1,4 @@
-FROM quay.io/bohan/library-nginx:1.15.12-alpine
+FROM nginx:1.15.12-alpine
 
 ARG NGX_BROTLI_VERSION=8104036af9cff4b1d34f22d00ba857e2a93a243c
 
