@@ -15,11 +15,11 @@ RUN set -ex; \
     apk add --no-cache --virtual .build-deps \
         curl \
         gcc \
+        git \
         libc-dev \
         make \
         pcre-dev \
         zlib-dev \
-        git \
     ; \
     curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
     tar -x -f nginx.tar.gz; \
