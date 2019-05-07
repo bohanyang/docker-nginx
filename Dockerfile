@@ -7,17 +7,12 @@ RUN set -ex; \
     deluser xfs; \
     # delete the existing nginx user
     deluser nginx; \
-    # delete the existing www-data group (uid 82)
-    delgroup www-data; \
     # create a new user and its group www-data with uid 33
     addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data
 
 RUN set -ex; \
-    apk add --no-cache \
-        ca-certificates \
-    ; \
+    apk add --no-cache ca-certificates; \
     apk add --no-cache --virtual .build-deps \
-        openssl \
         curl \
         gcc \
         libc-dev \
@@ -26,9 +21,9 @@ RUN set -ex; \
         zlib-dev \
         git \
     ; \
-    curl -O "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz"; \
-    tar -x -f "nginx-$NGINX_VERSION.tar.gz"; \
-    rm "nginx-$NGINX_VERSION.tar.gz"; \
+    curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
+    tar -x -f nginx.tar.gz; \
+    rm nginx.tar.gz; \
     git clone https://github.com/eustas/ngx_brotli.git; \
     cd ngx_brotli; \
     git checkout "$NGX_BROTLI_VERSION"; \
