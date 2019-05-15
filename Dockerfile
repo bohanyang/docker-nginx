@@ -44,6 +44,8 @@ RUN set -ex; \
     ; \
     cd "luajit2-$LUAJIT2_VERSION"; \
     $make_j install; \
+    export LUAJIT_LIB=/usr/local/lib; \
+    export LUAJIT_INC=/usr/local/include/luajit-2.1; \
     cd ..; \
     git clone https://github.com/eustas/ngx_brotli.git; \
     cd ngx_brotli; \
@@ -52,6 +54,7 @@ RUN set -ex; \
     cd "../nginx-$NGINX_VERSION"; \
     ./configure \
         --with-compat \
+        --with-ld-opt="-Wl,-rpath,/usr/local/lib" \
         --add-dynamic-module="../ngx_devel_kit-$NGX_DEVEL_KIT_VERSION" \
         --add-dynamic-module="../lua-nginx-module-$LUA_NGINX_MODULE_VERSION" \
         --add-dynamic-module=../ngx_brotli \
