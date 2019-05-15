@@ -68,7 +68,7 @@ RUN set -ex; \
     /etc/nginx/modules; \
     cd ..; \
     rm -rf \
-        "nginx-$NGINX_VERSION"
+        "nginx-$NGINX_VERSION" \
         "luajit2-$LUAJIT2_VERSION" LuaJIT \
         "ngx_devel_kit-$NGX_DEVEL_KIT_VERSION" \
         "lua-nginx-module-$LUA_NGINX_MODULE_VERSION" \
