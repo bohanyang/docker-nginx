@@ -16,7 +16,7 @@ RUN set -ex; \
     addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data
 
 RUN set -ex; \
-    apk add --no-cache ca-certificates libgccs; \
+    apk add --no-cache ca-certificates libgcc; \
     apk add --no-cache --virtual .build-deps \
         curl \
         gcc \
