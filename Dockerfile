@@ -61,7 +61,7 @@ RUN set -ex; \
     ; \
     $make_j modules; \
     cp \
-        objs/ndk_http_module.so.so \
+        objs/ndk_http_module.so \
         objs/ngx_http_lua_module.so \
         objs/ngx_http_brotli_filter_module.so \
         objs/ngx_http_brotli_static_module.so \
