@@ -54,7 +54,6 @@ RUN set -ex; \
     cd "../nginx-$NGINX_VERSION"; \
     ./configure \
         --with-compat \
-        --with-ld-opt="-Wl,-rpath,/usr/local/lib" \
         --add-dynamic-module="../ngx_devel_kit-$NGX_DEVEL_KIT_VERSION" \
         --add-dynamic-module="../lua-nginx-module-$LUA_NGINX_MODULE_VERSION" \
         --add-dynamic-module=../ngx_brotli \
