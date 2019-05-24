@@ -8,7 +8,7 @@ RUN set -ex; \
     # delete the existing nginx user
     deluser nginx; \
     # delete the existing www-data group (uid 82)
-    delgroup www-data; \
+    # delgroup www-data; \
     # create a new user and its group www-data with uid 33
     addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data; \
     # change the user defined in the default nginx configuration
