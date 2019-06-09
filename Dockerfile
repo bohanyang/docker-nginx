@@ -1,4 +1,4 @@
-FROM nginx:1.15.12-alpine
+FROM nginx:1.17.0-alpine
 
 ARG NGX_BROTLI_VERSION=8104036af9cff4b1d34f22d00ba857e2a93a243c
 
@@ -8,7 +8,7 @@ RUN set -ex; \
     # delete the existing nginx user
     deluser nginx; \
     # delete the existing www-data group (uid 82)
-    # delgroup www-data; \
+    delgroup www-data; \
     # create a new user and its group www-data with uid 33
     addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data; \
     # change the user defined in the default nginx configuration
