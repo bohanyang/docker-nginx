@@ -26,6 +26,7 @@ RUN set -ex; \
         zlib-dev \
     ; \
     make_j="make -j$(nproc)"; \
+    mkdir -p /usr/src; \
     cd /usr/src; \
     curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
     tar -xf nginx.tar.gz; \
