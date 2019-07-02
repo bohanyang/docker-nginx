@@ -1,11 +1,11 @@
 # Docker image for nginx
 
-[![](https://images.microbadger.com/badges/image/bohan/nginx:1.17.0.svg)](https://hub.docker.com/r/bohan/nginx)
+[![](https://images.microbadger.com/badges/image/bohan/nginx:1.17.1.svg)](https://hub.docker.com/r/bohan/nginx)
 
 ## Info
 
  * Built on the basis of [the official nginx Docker image](https://github.com/nginxinc/docker-nginx/blob/e5123eea0d29c8d13df17d782f15679458ff899e/mainline/alpine/Dockerfile)
- * nginx 1.17.0
+ * nginx 1.17.1
  * Alpine Linux 3.9
  * OpenSSL 1.1.1b with TLS 1.3 support
  * Added [ngx_brotli](https://github.com/eustas/ngx_brotli/tree/8104036af9cff4b1d34f22d00ba857e2a93a243c) as dynamic modules
@@ -16,7 +16,7 @@ Put your config files (`nginx.conf` etc.) inside a folder, for example: `~/nginx
 
 Then `run` the container:
 
-    docker run --name nginx --net host --restart always -v $HOME/nginx-config:/usr/src/docker-nginx/conf:ro -d bohan/nginx:1.17.0
+    docker run --name nginx --net host --restart always -v $HOME/nginx-config:/usr/src/docker-nginx/conf:ro -d bohan/nginx:1.17.1
 
 You **must** mount the config dir to this specific `/usr/src/docker-nginx/conf` path!
 
