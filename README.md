@@ -4,11 +4,13 @@
 
 ## Info
 
- * Built on the basis of [the official nginx Docker image](https://github.com/nginxinc/docker-nginx/blob/e5123eea0d29c8d13df17d782f15679458ff899e/mainline/alpine/Dockerfile)
+ * Built on the basis of [the official nginx Docker image](https://github.com/nginxinc/docker-nginx/blob/f9fbfcbcb24cb1fd6d207d33e9345d3e6dbb8ff2/mainline/alpine/Dockerfile)
  * nginx 1.17.1
  * Alpine Linux 3.9
  * OpenSSL 1.1.1b with TLS 1.3 support
  * Added [ngx_brotli](https://github.com/eustas/ngx_brotli/tree/8104036af9cff4b1d34f22d00ba857e2a93a243c) as dynamic modules
+ * Added [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module/tree/3.2) as dynamic module
+ * Added [nginx-ipip-module](https://github.com/ipipdotnet/nginx-ipip-module/tree/13d33e0d0c99fb3616d9c6a06562a1193098f9f9) as dynamic module
 
 ## **Awesome** Usage
 
@@ -32,9 +34,11 @@ After change, run the command:
 
 This `docker-nginx-reload.sh` script will test your new configuration and reload the server. It will rollback if the test fails.
 
-### Load `ngx_brotli` dynamic modules
+### Load dynamic modules
 
 Add these in the top‑level (main) context of your `nginx.conf` configuration file (not within the `http` or `stream` context):
 
     load_module /usr/lib/nginx/modules/ngx_http_brotli_filter_module.so;
     load_module /usr/lib/nginx/modules/ngx_http_brotli_static_module.so;
+    load_module /usr/lib/nginx/modules/ngx_http_geoip2_module.so;
+    load_module /usr/lib/nginx/modules/ngx_http_ipip_module.so;
