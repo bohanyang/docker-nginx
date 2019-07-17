@@ -10,7 +10,6 @@
  * OpenSSL 1.1.1b with TLS 1.3 support
  * Added [ngx_brotli](https://github.com/eustas/ngx_brotli/tree/8104036af9cff4b1d34f22d00ba857e2a93a243c) as dynamic modules
  * Added [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module/tree/3.2) as dynamic module
- * Added [nginx-ipip-module](https://github.com/ipipdotnet/nginx-ipip-module/tree/13d33e0d0c99fb3616d9c6a06562a1193098f9f9) as dynamic module
 
 ## **Awesome** Usage
 
@@ -41,4 +40,3 @@ Add these in the top‑level (main) context of your `nginx.conf` configuration f
     load_module /usr/lib/nginx/modules/ngx_http_brotli_filter_module.so;
     load_module /usr/lib/nginx/modules/ngx_http_brotli_static_module.so;
     load_module /usr/lib/nginx/modules/ngx_http_geoip2_module.so;
-    load_module /usr/lib/nginx/modules/ngx_http_ipip_module.so;
