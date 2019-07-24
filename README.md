@@ -1,14 +1,14 @@
 # Docker image for nginx
 
-[![](https://images.microbadger.com/badges/image/bohan/nginx:1.17.1.svg)](https://hub.docker.com/r/bohan/nginx)
+[![](https://images.microbadger.com/badges/image/bohan/nginx:1.17.2.svg)](https://hub.docker.com/r/bohan/nginx)
 
 ## Info
 
- * Built on the basis of [the official nginx Docker image](https://github.com/nginxinc/docker-nginx/blob/f9fbfcbcb24cb1fd6d207d33e9345d3e6dbb8ff2/mainline/alpine/Dockerfile)
- * nginx 1.17.1
- * Alpine Linux 3.9
- * OpenSSL 1.1.1b with TLS 1.3 support
- * Added [ngx_brotli](https://github.com/eustas/ngx_brotli/tree/8104036af9cff4b1d34f22d00ba857e2a93a243c) as dynamic modules
+ * Built on the basis of [the official nginx Docker image](https://github.com/nginxinc/docker-nginx/blob/c817e28dd68b6daa33265a8cb527b1c4cd723b59/mainline/alpine/Dockerfile)
+ * nginx 1.17.2
+ * Alpine Linux 3.10
+ * OpenSSL 1.1.1c with TLS 1.3 support
+ * Added [ngx_brotli](https://github.com/eustas/ngx_brotli/tree/dc37f658ccb5a51d090dc09d1a2aca2f24309869) as dynamic modules
  * Added [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module/tree/3.2) as dynamic module
 
 ## **Awesome** Usage
@@ -17,7 +17,7 @@ Put your config files (`nginx.conf` etc.) inside a folder, for example: `~/nginx
 
 Then `run` the container:
 
-    docker run --name nginx --net host --restart always -v $HOME/nginx-config:/usr/src/docker-nginx/conf:ro -d bohan/nginx:1.17.1
+    docker run --name nginx --net host --restart always -v $HOME/nginx-config:/usr/src/docker-nginx/conf:ro -d bohan/nginx:1.17.2
 
 You **must** mount the config dir to this specific `/usr/src/docker-nginx/conf` path!
 
