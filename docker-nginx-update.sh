@@ -17,7 +17,9 @@ cp -R "$confdir"/* "$nextdir"
 ln -sfn "$nextdir" "$destdir"
 
 if nginx -t; then
-  rm -rf "$currdir"
+  if [ "$currdir" != "$destdir" ]; then
+    rm -rf "$currdir"
+  fi
 else
   if [ "$currdir" != "$destdir" ]; then
     ln -sfn "$currdir" "$destdir"
