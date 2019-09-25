@@ -1,6 +1,6 @@
-FROM nginx:1.17.3-alpine
+FROM nginx:1.17.4-alpine
 
-ARG NGX_BROTLI_VERSION=7fab0418dedd1c4230877b357a1ca7cc7c355d84
+ARG NGX_BROTLI_VERSION=e505dce68acc190cc5a1e780a3b0275e39f160ca
 ARG GEOIP2_MODULE_VERSION=3.2
 
 RUN set -ex; \
@@ -38,7 +38,7 @@ RUN set -ex; \
         nginx.tar.gz \
         ngx_http_geoip2_module.tar.gz \
     ; \
-    git clone https://github.com/eustas/ngx_brotli.git; \
+    git clone https://github.com/google/ngx_brotli.git; \
     cd ngx_brotli; \
     git checkout "$NGX_BROTLI_VERSION"; \
     git submodule update --init; \
