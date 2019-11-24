@@ -1,7 +1,7 @@
-FROM nginx:1.17.5-alpine
+FROM nginx:1.17.6-alpine
 
 ARG NGX_BROTLI_VERSION=e505dce68acc190cc5a1e780a3b0275e39f160ca
-ARG GEOIP2_MODULE_VERSION=3.2
+ARG GEOIP2_MODULE_VERSION=3.3
 
 RUN set -ex; \
     # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon
