@@ -6,7 +6,7 @@ ENV NGINX_VERSION 1.17.7
 ENV NJS_VERSION   0.3.7
 ENV PKG_RELEASE   1
 
-COPY pkg-oss /usr/src/pkg-oss
+COPY pkg-oss /tmp/123/pkg-oss
 
 RUN set -x \
 # create nginx user/group first, to be consistent throughout docker variants
@@ -22,7 +22,7 @@ RUN set -x \
     " \
 # let's build binaries from the published packaging sources
     && set -x \
-    && tempDir="/usr/src" \
+    && tempDir="/tmp/123" \
     && chown nobody:nobody $tempDir \
     && apk add --no-cache --virtual .build-deps \
         gcc \
