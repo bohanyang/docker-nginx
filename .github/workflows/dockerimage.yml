@@ -16,7 +16,9 @@ jobs:
       - uses: actions/checkout@v1
       - name: Login
         run: docker login -u "$DOCKER_HUB_USERNAME" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
-      - name: Build the Docker image
+      - name: Build base image
+        run: docker build nginx --file Dockerfile --tag "nginx:${GITHUB_REF##*/v}-alpine"
+      - name: Build image
         run: docker build . --file Dockerfile --tag "$DOCKER_IMAGE_REPO:latest"
       - name: Test
         run: docker run --rm "$DOCKER_IMAGE_REPO:latest" sh -c "nginx -V && nginx -t"
