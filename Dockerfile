@@ -15,6 +15,8 @@ RUN set -ex; \
     # change the user defined in the default nginx configuration
     sed -ri 's/^#?user[ \t].+;/user www-data;/' /etc/nginx/nginx.conf
 
+COPY nginx/pkg-oss/alpine/nginx-1.17.7.tar.gz /usr/src/nginx.tar.gz
+
 RUN set -ex; \
     apk add --no-cache ca-certificates; \
     apk add --no-cache --virtual .build-deps \
@@ -30,7 +32,7 @@ RUN set -ex; \
     make_j="make -j$(nproc)"; \
     mkdir -p /usr/src; \
     cd /usr/src; \
-    curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
+    # curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
     curl -fsSL "https://github.com/leev/ngx_http_geoip2_module/archive/$GEOIP2_MODULE_VERSION.tar.gz" -o ngx_http_geoip2_module.tar.gz; \
     tar -xf nginx.tar.gz; \
     tar -xf ngx_http_geoip2_module.tar.gz; \
