@@ -15,8 +15,6 @@ RUN set -ex; \
     # change the user defined in the default nginx configuration
     sed -ri 's/^#?user[ \t].+;/user www-data;/' /etc/nginx/nginx.conf
 
-COPY nginx/pkg-oss/alpine/nginx-1.17.7.tar.gz /usr/src/nginx.tar.gz
-
 RUN set -ex; \
     apk add --no-cache ca-certificates; \
     apk add --no-cache --virtual .build-deps \
