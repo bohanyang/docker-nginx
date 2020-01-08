@@ -42,8 +42,9 @@ RUN set -x \
         git \
         patch \
         sed \
-    && su nobody -s /bin/sh -xc " \
-        export HOME=${tempDir} \
+    && su nobody -s /bin/sh -c " \
+        set -x \
+        && export HOME=${tempDir} \
         && cd ${tempDir} \
         && hg clone https://hg.nginx.org/pkg-oss \
         && cd pkg-oss \
