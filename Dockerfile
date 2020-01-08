@@ -26,7 +26,6 @@ RUN set -ex; \
         make \
         pcre-dev \
         zlib-dev \
-        git \
         patch \
     ; \
     make_j="make -j$(nproc)"; \
