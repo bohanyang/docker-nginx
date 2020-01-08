@@ -28,11 +28,17 @@ RUN set -ex; \
         make \
         pcre-dev \
         zlib-dev \
+        git \
+        patch \
     ; \
     make_j="make -j$(nproc)"; \
     mkdir -p /usr/src; \
     cd /usr/src; \
-    # curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
+    git clone https://github.com/nginx/nginx.git; \
+    cd nginx; \
+    git format-patch -1 fb34316d68511bd0986d3153dfea93d21363016d --stdout > ../nginx.patch; \
+    cd ..; \
+    curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
     curl -fsSL "https://github.com/leev/ngx_http_geoip2_module/archive/$GEOIP2_MODULE_VERSION.tar.gz" -o ngx_http_geoip2_module.tar.gz; \
     tar -xf nginx.tar.gz; \
     tar -xf ngx_http_geoip2_module.tar.gz; \
@@ -45,6 +51,7 @@ RUN set -ex; \
     git checkout "$NGX_BROTLI_VERSION"; \
     git submodule update --init; \
     cd "../nginx-$NGINX_VERSION"; \
+    patch -p1 < ../nginx.patch; \
     ./configure \
         --with-compat \
         --add-dynamic-module=../ngx_brotli \
@@ -58,9 +65,11 @@ RUN set -ex; \
     /usr/lib/nginx/modules; \
     cd ..; \
     rm -rf \
+        nginx \
         "nginx-$NGINX_VERSION" \
         ngx_brotli \
         "ngx_http_geoip2_module-$GEOIP2_MODULE_VERSION" \
+        nginx.patch \
     ; \
     runDeps="$( \
         scanelf --needed --nobanner --format '%n#p' /usr/lib/nginx/modules/*.so \

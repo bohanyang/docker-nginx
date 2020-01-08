@@ -6,8 +6,6 @@ ENV NGINX_VERSION 1.17.7
 ENV NJS_VERSION   0.3.7
 ENV PKG_RELEASE   1
 
-COPY --chown=nobody:nobody pkg-oss /usr/src/pkg-oss
-
 RUN set -x \
 # create nginx user/group first, to be consistent throughout docker variants
     && addgroup -g 101 -S nginx \
@@ -22,7 +20,7 @@ RUN set -x \
     " \
 # let's build binaries from the published packaging sources
     && set -x \
-    && tempDir="/usr/src" \
+    && tempDir="$(mktemp -d)" \
     && chown nobody:nobody $tempDir \
     && apk add --no-cache --virtual .build-deps \
         gcc \
@@ -37,14 +35,32 @@ RUN set -x \
         geoip-dev \
         perl-dev \
         libedit-dev \
+        mercurial \
         bash \
         alpine-sdk \
         findutils \
+        git \
+        patch \
+        sed \
     && su nobody -s /bin/sh -c " \
         export HOME=${tempDir} \
         && cd ${tempDir} \
+        && hg clone https://hg.nginx.org/pkg-oss \
         && cd pkg-oss \
+        && hg up ${NGINX_VERSION}-${PKG_RELEASE} \
         && cd alpine \
+        && sed -i '284,286d' Makefile \
+        && git clone https://github.com/nginx/nginx.git \
+        && cd nginx \
+        && git format-patch -1 fb34316d68511bd0986d3153dfea93d21363016d --stdout > ../nginx.patch \
+        && cd .. \
+        && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz \
+        && tar -xf nginx-${NGINX_VERSION}.tar.gz \
+        && rm nginx-${NGINX_VERSION}.tar.gz \
+        && cd nginx-${NGINX_VERSION} \
+        && patch -p1 < ../nginx.patch \
+        && cd .. \
+        && tar -czf nginx-${NGINX_VERSION}.tar.gz nginx-${NGINX_VERSION} \
         && make all \
         && apk index -o ${tempDir}/packages/alpine/${apkArch}/APKINDEX.tar.gz ${tempDir}/packages/alpine/${apkArch}/*.apk \
         && abuild-sign -k ${tempDir}/.abuild/abuild-key.rsa ${tempDir}/packages/alpine/${apkArch}/APKINDEX.tar.gz \
