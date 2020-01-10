@@ -1,6 +1,6 @@
 # Docker image for nginx
 
-[![](https://images.microbadger.com/badges/image/bohan/nginx:1.17.7.svg)](https://hub.docker.com/r/bohan/nginx)
+[![](https://dockeri.co/image/bohan/nginx)](https://hub.docker.com/r/bohan/nginx)
 
 ## Info
 
@@ -17,7 +17,7 @@ Put your config files (`nginx.conf` etc.) inside a folder, for example: `~/nginx
 
 Then `run` the container:
 
-    docker run --name nginx --net host --restart always -v $HOME/nginx-config:/usr/src/docker-nginx/conf:ro -d bohan/nginx
+    docker run --name nginx --net host --restart always -v $HOME/nginx-config:/usr/src/docker-nginx/conf:ro -d bohan/nginx:1.17.7
 
 You **must** mount the config dir to this specific `/usr/src/docker-nginx/conf` path!
 
