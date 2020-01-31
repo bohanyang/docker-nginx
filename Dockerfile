@@ -1,4 +1,4 @@
-FROM nginx:1.17.7-alpine
+FROM nginx:1.17.8-alpine
 
 ARG NGX_BROTLI_VERSION=e505dce68acc190cc5a1e780a3b0275e39f160ca
 ARG GEOIP2_MODULE_VERSION=3.3
@@ -26,15 +26,10 @@ RUN set -ex; \
         make \
         pcre-dev \
         zlib-dev \
-        patch \
     ; \
     make_j="make -j$(nproc)"; \
     mkdir -p /usr/src; \
     cd /usr/src; \
-    git clone https://github.com/nginx/nginx.git; \
-    cd nginx; \
-    git format-patch -1 fb34316d68511bd0986d3153dfea93d21363016d --stdout > ../nginx.patch; \
-    cd ..; \
     curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
     curl -fsSL "https://github.com/leev/ngx_http_geoip2_module/archive/$GEOIP2_MODULE_VERSION.tar.gz" -o ngx_http_geoip2_module.tar.gz; \
     tar -xf nginx.tar.gz; \
@@ -48,7 +43,6 @@ RUN set -ex; \
     git checkout "$NGX_BROTLI_VERSION"; \
     git submodule update --init; \
     cd "../nginx-$NGINX_VERSION"; \
-    patch -p1 < ../nginx.patch; \
     ./configure \
         --with-compat \
         --add-dynamic-module=../ngx_brotli \
@@ -62,11 +56,9 @@ RUN set -ex; \
     /usr/lib/nginx/modules; \
     cd ..; \
     rm -rf \
-        nginx \
         "nginx-$NGINX_VERSION" \
         ngx_brotli \
         "ngx_http_geoip2_module-$GEOIP2_MODULE_VERSION" \
-        nginx.patch \
     ; \
     runDeps="$( \
         scanelf --needed --nobanner --format '%n#p' /usr/lib/nginx/modules/*.so \
