@@ -40,14 +40,14 @@ RUN set -x \
 # we're on an architecture upstream doesn't officially build for
 # let's build binaries from the published packaging sources
             set -x \
-            && echo '@openssl http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories \
+            && echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories \
             && tempDir="$(mktemp -d)" \
             && chown nobody:nobody $tempDir \
+            && apk add --no-cache openssl-dev@edge \
             && apk add --no-cache --virtual .build-deps \
                 gcc \
                 libc-dev \
                 make \
-                openssl-dev@openssl \
                 pcre-dev \
                 zlib-dev \
                 linux-headers \
@@ -72,7 +72,7 @@ RUN set -x \
                 && abuild-sign -k ${tempDir}/.abuild/abuild-key.rsa ${tempDir}/packages/alpine/${apkArch}/APKINDEX.tar.gz \
                 " \
             && cp ${tempDir}/.abuild/abuild-key.rsa.pub /etc/apk/keys/ \
-            && apk del .build-deps \
+            && apk del .build-deps openssl-dev@edge \
             && apk add -X ${tempDir}/packages/alpine/ --no-cache $nginxPackages \
             ;; \
     esac \
