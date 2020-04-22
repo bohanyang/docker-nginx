@@ -7,7 +7,7 @@
  * Built on the basis of [the official nginx Docker image](https://github.com/nginxinc/docker-nginx/blob/594ce7a8bc26c85af88495ac94d5cd0096b306f7/mainline/alpine/Dockerfile)
  * nginx 1.17.10
  * Alpine Linux 3.11
- * OpenSSL 1.1.1d with TLS 1.3 support
+ * OpenSSL 1.1.1g with TLS 1.3 support
  * Added [ngx_brotli](https://github.com/google/ngx_brotli/tree/bcceaab88e555f686d5ed39dfb238f898df2788c) as dynamic modules
  * Added [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module/tree/3.3) as dynamic module
 
