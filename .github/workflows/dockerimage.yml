@@ -17,7 +17,7 @@ jobs:
       - name: Login
         run: docker login -u "$DOCKER_HUB_USERNAME" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
       - name: Build base image
-        run: docker build base --tag "nginx:${GITHUB_REF##*/v}-alpine"
+        run: docker build base --tag nginx
       - name: Build image
         run: docker build . --tag "$DOCKER_IMAGE_REPO:latest"
       - name: Test
