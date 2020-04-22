@@ -40,7 +40,7 @@ RUN set -x \
 # we're on an architecture upstream doesn't officially build for
 # let's build binaries from the published packaging sources
             set -x \
-            && echo '@openssl http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories
+            && echo '@openssl http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories \
             && tempDir="$(mktemp -d)" \
             && chown nobody:nobody $tempDir \
             && apk add --no-cache --virtual .build-deps \
