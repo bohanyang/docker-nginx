@@ -19,7 +19,7 @@ RUN set -x \
         nginx-module-njs=${NGINX_VERSION}.${NJS_VERSION}-r${PKG_RELEASE} \
     " \
     && case "$apkArch" in \
-        x86_64) \
+        x86_64_fallthru) \
 # arches officially built by upstream
             set -x \
             && KEY_SHA512="e7fa8303923d9b95db37a77ad46c68fd4755ff935d0a534d26eba83de193c76166c68bfe7f65471bf8881004ef4aa6df3e34689c305662750c0172fca5d8552a *stdin" \
@@ -40,13 +40,14 @@ RUN set -x \
 # we're on an architecture upstream doesn't officially build for
 # let's build binaries from the published packaging sources
             set -x \
+            && echo '@openssl http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories
             && tempDir="$(mktemp -d)" \
             && chown nobody:nobody $tempDir \
             && apk add --no-cache --virtual .build-deps \
                 gcc \
                 libc-dev \
                 make \
-                openssl-dev \
+                openssl-dev@openssl \
                 pcre-dev \
                 zlib-dev \
                 linux-headers \
