@@ -10,9 +10,16 @@ _upstream="$_base/conf"
 # Ensure upstream exists
 mkdir -p "$_upstream"
 
-# First start: "/etc/nginx"
-# Subsequent updates: "/usr/src/docker-nginx/v0012345678"
-_current="$(readlink -f $_link)"
+if [ ! -e "$_link" ]; then
+  # First start: ""
+  # Subsequent updates: "/usr/src/docker-nginx/v0012345678"
+  _current=""
+elif [ -L "$_link" ]; then
+  _current="$(readlink -f "$_link")"
+else
+  echo "Invalid link $_link" >&2
+  exit 1
+fi
 
 # First start: "/usr/src/docker-nginx/v0012345678"
 # Subsequent updates: "/usr/src/docker-nginx/v1123456789"
@@ -33,14 +40,15 @@ ln -sfn "$_target" "$_link"
 
 if nginx -t; then
   # Test OK
-  if [ "$_current" != "$_link" ]; then
+  if [ -n "$_current" ]; then
     # Delete old target only if it's not a first start
     rm -rf "$_current"
   fi
 else
   # Test failed
   rm -rf "$_target"
-  if [ "$_current" == "$_link" ]; then
+  if [ -z "$_current" ]; then
+    rm -rf "$_link"
     exit 1
   fi
   # Rollback only if it's not a first start
