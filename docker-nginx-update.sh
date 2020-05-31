@@ -1,46 +1,48 @@
 #!/usr/bin/env sh
 
-set -e
+set -eux
 
-test_exists_one()
-{
-  test -e "$1"
-}
+_link="/etc/nginx"
+_base="/usr/src/docker-nginx"
+_defaults="$_base/defaults"
+_upstream="$_base/conf"
 
-destdir="/etc/nginx"
+# Ensure upstream exists
+mkdir -p "$_upstream"
 
-# First Start: "/etc/nginx"
-# Subsequent Updates: "/usr/src/docker-nginx/v0000000000000000000"
-currdir="$(readlink -f $destdir)"
+# First start: "/etc/nginx"
+# Subsequent updates: "/usr/src/docker-nginx/v0012345678"
+_current="$(readlink -f $_link)"
 
-workdir="/usr/src/docker-nginx"
-confdir="$workdir/conf"
-defaults="$workdir/defaults"
+# First start: "/usr/src/docker-nginx/v0012345678"
+# Subsequent updates: "/usr/src/docker-nginx/v1123456789"
+_target="$_base/v$(date +%s%N)"
 
-# First Start: "/usr/src/docker-nginx/v0000000000000000000"
-# Subsequent Updates: "/usr/src/docker-nginx/v1111111111111111111"
-nextdir="$workdir/v$(date +%s%N)"
+# Ensure target is empty
+rm -rf "$_target"
+mkdir "$_target"
 
-rm -rf "$nextdir"
-mkdir "$nextdir"
+# Apply defaults
+cp -R "$_defaults/." "$_target"
 
-mkdir -p "$confdir"
-cp -R "$defaults/"* "$nextdir"
+# Pull from upstream (defaults will be overwritten)
+cp -R "$_upstream/." "$_target"
 
-if test_exists_one "$confdir/"*; then
-  cp -R "$confdir/"* "$nextdir"
-fi
-
-ln -sfn "$nextdir" "$destdir"
+# Set link to target
+ln -sfn "$_target" "$_link"
 
 if nginx -t; then
-  if [ "$currdir" != "$destdir" ]; then
-    rm -rf "$currdir"
+  # Test OK
+  if [ "$_current" != "$_link" ]; then
+    # Delete old target only if it's not a first start
+    rm -rf "$_current"
   fi
 else
-  if [ "$currdir" != "$destdir" ]; then
-    ln -sfn "$currdir" "$destdir"
+  # Test failed
+  if [ "$_current" != "$_link" ]; then
+    # Rollback only if it's not a first start
+    ln -sfn "$_current" "$_link"
   fi
-  rm -rf "$nextdir"
+  rm -rf "$_target"
   exit 1
 fi
