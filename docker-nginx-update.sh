@@ -18,7 +18,7 @@ fi
 
 if [ ! -e "$_defaults" ] && [ -d "$_origin" ]; then
   cp -R "$_origin" "$_defaults"
-  if [ "$_origin" == "$_link" ]; then
+  if [ "$_origin" = "$_link" ]; then
     rm -rf "$_link"
   fi
 fi
@@ -72,4 +72,5 @@ else
   fi
   # Rollback only if it's not a first start
   ln -sfn "$_current" "$_link"
+  exit 100
 fi
