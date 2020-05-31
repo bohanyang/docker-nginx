@@ -2,20 +2,33 @@
 
 set -eux
 
+_origin="/etc/nginx"
 _link="/etc/nginx"
 _base="/usr/src/docker-nginx"
 _defaults="$_base/defaults"
 _upstream="$_base/conf"
 
-# Ensure upstream exists
-mkdir -p "$_upstream"
+if [ ! -d "$_base" ]; then
+  if [ -e "$_base" ]; then
+    echo "Invalid base $_base" >&2
+    exit 1
+  fi
+  mkdir -p "$_base"
+fi
 
-if [ ! -e "$_link" ]; then
+if [ ! -e "$_defaults" ] && [ -d "$_origin" ]; then
+  cp -R "$_origin" "$_defaults"
+  if [ "$_origin" == "$_link" ]; then
+    rm -rf "$_link"
+  fi
+fi
+
+if [ -L "$_link" ]; then
   # First start: ""
   # Subsequent updates: "/usr/src/docker-nginx/v0012345678"
-  _current=""
-elif [ -L "$_link" ]; then
   _current="$(readlink -f "$_link")"
+elif [ ! -e "$_link" ]; then
+  _current=""
 else
   echo "Invalid link $_link" >&2
   exit 1
@@ -26,14 +39,20 @@ fi
 _target="$_base/v$(date +%s%N)"
 
 # Ensure target is empty
-rm -rf "$_target"
+if [ -e "$_target" ]; then
+  rm -rf "$_target"
+fi
 mkdir "$_target"
 
-# Apply defaults
-cp -R "$_defaults/." "$_target"
+if [ -d "$_defaults" ]; then
+  # Apply defaults
+  cp -R "$_defaults/." "$_target"
+fi
 
-# Pull from upstream (defaults will be overwritten)
-cp -R "$_upstream/." "$_target"
+if [ -d "$_upstream" ]; then
+  # Pull from upstream (defaults will be overwritten)
+  cp -R "$_upstream/." "$_target"
+fi
 
 # Set link to target
 ln -sfn "$_target" "$_link"
