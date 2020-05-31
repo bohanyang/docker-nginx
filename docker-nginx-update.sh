@@ -39,10 +39,10 @@ if nginx -t; then
   fi
 else
   # Test failed
-  if [ "$_current" != "$_link" ]; then
-    # Rollback only if it's not a first start
-    ln -sfn "$_current" "$_link"
-  fi
   rm -rf "$_target"
-  exit 1
+  if [ "$_current" == "$_link" ]; then
+    exit 1
+  fi
+  # Rollback only if it's not a first start
+  ln -sfn "$_current" "$_link"
 fi
