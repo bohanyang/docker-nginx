@@ -57,7 +57,13 @@ fi
 if ! nginx -t -p "$_target" -c "$_target/nginx.conf"; then
   # Test failed
   rm -rf "$_target"
-  exit 1
+
+  if [ -z "$_current" ]; then
+    # Cannot proceed if link does not exist
+    exit 1
+  fi
+
+  exit 100
 fi
 
 # Test OK

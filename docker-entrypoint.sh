@@ -10,6 +10,7 @@ _prepare_nginx_cache_dir() {
 
 _prepare_nginx_cache_dir /var/cache/nginx www-data:www-data
 
-docker-nginx-update.sh
+# Proceed if link exists
+docker-nginx-update.sh || [ 100 -eq "$?" ]
 
 exec "$@"
