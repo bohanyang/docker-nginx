@@ -13,7 +13,9 @@ RUN set -ex; \
     # create a new user and its group www-data with uid 33
     addgroup -g 33 -S www-data; adduser -G www-data -S -D -H -u 33 www-data; \
     # change the user defined in the default nginx configuration
-    sed -ri 's/^#?user[ \t].+;/user www-data;/' /etc/nginx/nginx.conf
+    sed -ri 's/^#?user[ \t].+;/user www-data;/' /etc/nginx/nginx.conf; \
+    # remove hard coded absolute path prefix
+    sed -i 's,/etc/nginx/,,' /etc/nginx/nginx.conf
 
 RUN set -ex; \
     apk add --no-cache ca-certificates; \
