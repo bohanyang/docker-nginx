@@ -16,7 +16,7 @@ if [ ! -d "$_base" ]; then
   mkdir -p "$_base"
 fi
 
-if [ ! -e "$_defaults" ] && [ -d "$_origin" ]; then
+if [ ! -e "$_defaults" ] && [ ! -L "$_origin" ] && [ -d "$_origin" ]; then
   cp -R "$_origin" "$_defaults"
   if [ "$_origin" = "$_link" ]; then
     rm -rf "$_link"
