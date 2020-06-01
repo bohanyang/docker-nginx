@@ -54,23 +54,17 @@ if [ -d "$_upstream" ]; then
   cp -R "$_upstream/." "$_target"
 fi
 
+if ! nginx -t -p "$_target" -c "$_target/nginx.conf"; then
+  # Test failed
+  rm -rf "$_target"
+  exit 1
+fi
+
+# Test OK
 # Set link to target
 ln -sfn "$_target" "$_link"
 
-if nginx -t; then
-  # Test OK
-  if [ -n "$_current" ]; then
-    # Delete old target only if it's not a first start
-    rm -rf "$_current"
-  fi
-else
-  # Test failed
-  rm -rf "$_target"
-  if [ -z "$_current" ]; then
-    rm -rf "$_link"
-    exit 1
-  fi
-  # Rollback only if it's not a first start
-  ln -sfn "$_current" "$_link"
-  exit 100
+if [ -n "$_current" ]; then
+  # Delete old target only if it's not a first start
+  rm -rf "$_current"
 fi

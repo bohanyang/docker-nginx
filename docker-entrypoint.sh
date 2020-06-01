@@ -10,7 +10,6 @@ _prepare_nginx_cache_dir() {
 
 _prepare_nginx_cache_dir /var/cache/nginx www-data:www-data
 
-# Catch error and proceed only if rollbacked
-docker-nginx-update.sh || [ 100 -eq "$?" ]
+docker-nginx-update.sh
 
 exec "$@"
