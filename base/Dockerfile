@@ -72,7 +72,7 @@ RUN set -eux; \
             "; \
             cp ${tempDir}/.abuild/abuild-key.rsa.pub /etc/apk/keys/; \
             apk del .build-deps; \
-            apk add -X ${tempDir}/packages/alpine/ --no-cache $nginxPackages \
+            apk add -X ${tempDir}/packages/alpine/ --no-cache $nginxPackages; \
 # if we have leftovers from building, let's purge them (including extra, unnecessary build deps)
             rm -r "$tempDir"
             ;; \
