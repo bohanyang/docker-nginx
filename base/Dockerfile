@@ -40,7 +40,7 @@ RUN set -eux; \
 # we're on an architecture upstream doesn't officially build for
 # let's build binaries from the published packaging sources
             tempDir="$(mktemp -d)"; \
-            chown nobody:nobody $tempDir; \
+            chown nobody:nobody "$tempDir"; \
             apk add --no-cache --virtual .build-deps \
                 gcc \
                 libc-dev \
@@ -73,10 +73,10 @@ RUN set -eux; \
             cp ${tempDir}/.abuild/abuild-key.rsa.pub /etc/apk/keys/; \
             apk del .build-deps; \
             apk add -X ${tempDir}/packages/alpine/ --no-cache $nginxPackages \
+# if we have leftovers from building, let's purge them (including extra, unnecessary build deps)
+            rm -r "$tempDir"
             ;; \
     esac; \
-# if we have leftovers from building, let's purge them (including extra, unnecessary build deps)
-    if [ -n "$tempDir" ]; then rm -rf "$tempDir"; fi; \
     if [ -n "/etc/apk/keys/abuild-key.rsa.pub" ]; then rm -f /etc/apk/keys/abuild-key.rsa.pub; fi; \
     if [ -n "/etc/apk/keys/nginx_signing.rsa.pub" ]; then rm -f /etc/apk/keys/nginx_signing.rsa.pub; fi; \
 # Bring in gettext so we can get `envsubst`, then throw
