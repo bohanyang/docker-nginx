@@ -3,7 +3,7 @@ FROM nginx
 ARG NGX_BROTLI_VERSION=v1.0.0rc
 ARG GEOIP2_MODULE_VERSION=3.3
 
-RUN set -ex; \
+RUN set -eux; \
     # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon
     deluser xfs; \
     # delete the existing nginx user
@@ -17,10 +17,8 @@ RUN set -ex; \
     # remove hard coded absolute path prefix
     sed -i 's,/etc/nginx/,,' /etc/nginx/nginx.conf
 
-RUN set -ex; \
-    apk add --no-cache ca-certificates; \
+RUN set -eux; \
     apk add --no-cache --virtual .build-deps \
-        curl \
         gcc \
         git \
         libc-dev \
