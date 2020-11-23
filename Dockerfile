@@ -3,7 +3,7 @@ FROM nginx
 ARG NGX_BROTLI_VERSION=9aec15e2aa6feea2113119ba06460af70ab3ea62
 ARG GEOIP2_MODULE_VERSION=3.3
 
-RUN set -eux; \
+RUN set -ex; \
     # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon
     deluser xfs; \
     # delete the existing nginx user
@@ -32,8 +32,8 @@ RUN set -eux; \
     cd /usr/src; \
     curl -fsSL "https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -o nginx.tar.gz; \
     curl -fsSL "https://github.com/leev/ngx_http_geoip2_module/archive/$GEOIP2_MODULE_VERSION.tar.gz" -o ngx_http_geoip2_module.tar.gz; \
-    tar -xf nginx.tar.gz; \
-    tar -xf ngx_http_geoip2_module.tar.gz; \
+    tar xf nginx.tar.gz; \
+    tar xf ngx_http_geoip2_module.tar.gz; \
     rm \
         nginx.tar.gz \
         ngx_http_geoip2_module.tar.gz \
