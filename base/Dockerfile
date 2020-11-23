@@ -2,14 +2,20 @@ FROM alpine:3.12
 
 LABEL maintainer="NGINX Docker Maintainers <docker-maint@nginx.com>"
 
-ENV NGINX_VERSION 1.19.3
+ENV NGINX_VERSION 1.19.4
 ENV NJS_VERSION   0.4.4
 ENV PKG_RELEASE   1
 
 RUN set -eux; \
-# create nginx user/group first, to be consistent throughout docker variants
+# Create nginx user/group first, to be consistent throughout docker variants
     addgroup -g 101 -S nginx; \
     adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx; \
+    apk add --no-cache \
+# Bring in tzdata so users could set the timezones through the environment variables
+        tzdata \
+# Bring in curl to make registering on DNS SD easier
+        curl \
+    ; \
     apkArch="$(cat /etc/apk/arch)"; \
     nginxPackages=" \
         nginx=${NGINX_VERSION}-r${PKG_RELEASE} \
@@ -21,25 +27,23 @@ RUN set -eux; \
     "; \
     case "$apkArch" in \
         x86_64) \
-# arches officially built by upstream
+# Arches officially built by upstream
             KEY_SHA512="e7fa8303923d9b95db37a77ad46c68fd4755ff935d0a534d26eba83de193c76166c68bfe7f65471bf8881004ef4aa6df3e34689c305662750c0172fca5d8552a *stdin"; \
-            apk add --no-cache --virtual .cert-deps \
-                openssl \
-            ; \
-            wget -O /tmp/nginx_signing.rsa.pub https://nginx.org/keys/nginx_signing.rsa.pub; \
+            apk add --no-cache --virtual .cert-deps openssl; \
+            curl -fsSL -D - https://nginx.org/keys/nginx_signing.rsa.pub -o /tmp/nginx_signing.rsa.pub; \
             if [ "$(openssl rsa -pubin -in /tmp/nginx_signing.rsa.pub -text -noout | openssl sha512 -r)" = "$KEY_SHA512" ]; then \
-                echo "key verification succeeded!"; \
+                echo 'Key verification succeeded!'; \
                 mv /tmp/nginx_signing.rsa.pub /etc/apk/keys/; \
             else \
-                echo "key verification failed!"; \
+                echo 'Key verification failed!'; \
                 exit 1; \
             fi; \
             apk del .cert-deps; \
             apk add -X "https://nginx.org/packages/mainline/alpine/v$(egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release)/main" --no-cache $nginxPackages \
             ;; \
         *) \
-# we're on an architecture upstream doesn't officially build for
-# let's build binaries from the published packaging sources
+# We're on an architecture upstream doesn't officially build for.
+# Let's build binaries from the published packaging sources
             tempDir="$(mktemp -d)"; \
             chown nobody:nobody "$tempDir"; \
             apk add --no-cache --virtual .build-deps \
@@ -97,14 +101,6 @@ RUN set -eux; \
     apk add --no-cache $runDeps; \
     apk del .gettext; \
     mv /tmp/envsubst /usr/local/bin/; \
-    apk add --no-cache \
-# Bring in tzdata so users could set the timezones through the environment
-# variables
-        tzdata \
-# Bring in curl and ca-certificates to make registering on DNS SD easier
-        curl \
-        ca-certificates \
-    ; \
 # forward request and error logs to docker log collector
     ln -sf /dev/stdout /var/log/nginx/access.log; \
     ln -sf /dev/stderr /var/log/nginx/error.log
