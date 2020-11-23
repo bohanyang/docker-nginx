@@ -1,4 +1,4 @@
-name: Docker Image Builder
+name: Docker Image
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Build image
         run: docker build . --tag "$DOCKER_IMAGE_REPO:latest"
       - name: Test
-        run: docker run --rm "$DOCKER_IMAGE_REPO:latest" sh -ceux "nginx -V; nginx -t"
+        run: docker run --rm "$DOCKER_IMAGE_REPO:latest" sh -c "nginx -V && nginx -t"
       - name: Tag
         run: docker tag "$DOCKER_IMAGE_REPO:latest" "$DOCKER_IMAGE_REPO:${GITHUB_REF##*/v}"
       - name: Push
