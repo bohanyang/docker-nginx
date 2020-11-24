@@ -17,7 +17,7 @@ jobs:
       - name: Login
         run: docker login -u "$DOCKER_HUB_USERNAME" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
       - name: Build base image
-        run: docker build base --tag nginx
+        run: docker build base --tag nginx:latest
       - name: Build image
         run: docker build . --tag "$DOCKER_IMAGE_REPO:latest"
       - name: Test
@@ -25,6 +25,4 @@ jobs:
       - name: Tag
         run: docker tag "$DOCKER_IMAGE_REPO:latest" "$DOCKER_IMAGE_REPO:${GITHUB_REF##*/v}"
       - name: Push
-        run: |
-          docker push "$DOCKER_IMAGE_REPO:${GITHUB_REF##*/v}";
-          docker push "$DOCKER_IMAGE_REPO:latest"
+        run: docker push "$DOCKER_IMAGE_REPO:${GITHUB_REF##*/v}" && docker push "$DOCKER_IMAGE_REPO:latest"

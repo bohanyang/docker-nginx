@@ -1,0 +1,76 @@
+#!/bin/sh
+
+set -eu
+
+origin="/etc/nginx"
+link="/etc/nginx"
+base="/var/nginx"
+defaults="$base/defaults"
+upstream="$base/conf"
+
+if [ ! -d "$base" ]; then
+  if [ -e "$base" ]; then
+    echo "Invalid base: $base" >&2
+    exit 1
+  fi
+  mkdir -p "$base"
+fi
+
+if [ ! -e "$defaults" ] && [ ! -L "$origin" ] && [ -d "$origin" ]; then
+  cp -R "$origin" "$defaults"
+  if [ "$origin" = "$link" ]; then
+    rm -rf "$link"
+  fi
+fi
+
+if [ -L "$link" ]; then
+  # First start: ""
+  # Subsequent updates: "$base/v0012345678"
+  current="$(readlink -f "$link")"
+elif [ ! -e "$link" ]; then
+  current=""
+else
+  echo "Invalid link: $link" >&2
+  exit 1
+fi
+
+# First start: "$base/v0012345678"
+# Subsequent updates: "$base/v1123456789"
+target="$base/v$(date +%s%N)"
+
+# Ensure target is empty
+if [ -e "$target" ]; then
+  rm -rf "$target"
+fi
+mkdir "$target"
+
+if [ -d "$defaults" ]; then
+  # Apply defaults
+  cp -R "$defaults/." "$target"
+fi
+
+if [ -d "$upstream" ]; then
+  # Pull from upstream (defaults will be overwritten)
+  cp -R "$upstream/." "$target"
+fi
+
+if ! nginx -t -p "$target" -c "$target/nginx.conf"; then
+  # Test failed
+  rm -rf "$target"
+
+  if [ -z "$current" ]; then
+    # Cannot proceed if link does not exist
+    exit 1
+  fi
+
+  exit 10
+fi
+
+# Test OK
+# Set link to target
+ln -sfn "$target" "$link"
+
+if [ -n "$current" ]; then
+  # Delete old target only if it's not a first start
+  rm -rf "$current"
+fi

@@ -2,7 +2,7 @@ FROM alpine:3.12
 
 LABEL maintainer="NGINX Docker Maintainers <docker-maint@nginx.com>"
 
-ENV NGINX_VERSION 1.19.4
+ENV NGINX_VERSION 1.19.5
 ENV NJS_VERSION 0.4.4
 ENV PKG_RELEASE 1
 
@@ -99,10 +99,7 @@ RUN set -eux; \
     )"; \
     apk add --no-cache $runDeps; \
     apk del .gettext; \
-    mv /tmp/envsubst /usr/local/bin/; \
-# Forward request and error logs to docker log collector
-    ln -sf /dev/stdout /var/log/nginx/access.log; \
-    ln -sf /dev/stderr /var/log/nginx/error.log
+    mv /tmp/envsubst /usr/local/bin/
 
 EXPOSE 80
 

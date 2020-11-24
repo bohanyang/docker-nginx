@@ -1,0 +1,14 @@
+#!/usr/bin/execlineb -P
+
+with-contenv
+foreground { nginx-pull-config }
+importas -u ? ?
+
+if
+{
+    if -t -n { exit ${?} }
+    if { test 10 -eq ${?} }
+    echo "[services.d] nginx/run: proceeding with existing previous configuration."
+}
+
+nginx -g "daemon off;"

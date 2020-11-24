@@ -1,13 +1,12 @@
-FROM nginx
+FROM nginx:latest
 
 ARG NGX_BROTLI_VERSION=9aec15e2aa6feea2113119ba06460af70ab3ea62
 ARG GEOIP2_MODULE_VERSION=3.3
+ARG S6_OVERLAY_VERSION=2.1.0.0
 
 RUN set -ex; \
     # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon
     deluser xfs; \
-    # delete the existing nginx user
-    deluser nginx; \
     # delete the existing www-data group (uid 82)
     delgroup www-data; \
     # create a new user and its group www-data with uid 33
@@ -46,7 +45,7 @@ RUN set -eux; \
     ./configure \
         --with-compat \
         --add-dynamic-module=../ngx_brotli \
-        --add-dynamic-module=../ngx_http_geoip2_module-$GEOIP2_MODULE_VERSION \
+        "--add-dynamic-module=../ngx_http_geoip2_module-$GEOIP2_MODULE_VERSION" \
     ; \
     $make_j modules; \
     cp \
@@ -67,10 +66,13 @@ RUN set -eux; \
             | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
     )"; \
     apk add --no-cache $runDeps; \
-    apk del .build-deps
+    apk del .build-deps; \
+    curl -fsSL "https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz" -o /tmp/s6-overlay.tar.gz; \
+    tar xf /tmp/s6-overlay.tar.gz -C /; \
+    rm /tmp/s6-overlay.tar.gz /etc/s6/services/s6-fdholderd/down; \
+    mkdir /var/log/nginx-access-log /var/log/nginx-error-log
 
-COPY docker-nginx-*.sh docker-entrypoint.sh /usr/local/bin/
+COPY rootfs /
+COPY nginx-pull-config nginx-reload /usr/local/bin/
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/init"]
