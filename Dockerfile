@@ -2,7 +2,7 @@ FROM nginx:latest
 
 ARG NGX_BROTLI_VERSION=9aec15e2aa6feea2113119ba06460af70ab3ea62
 ARG GEOIP2_MODULE_VERSION=3.3
-ARG S6_OVERLAY_VERSION=2.1.0.0
+ARG S6_OVERLAY_VERSION=2.1.0.2
 
 RUN set -ex; \
     # delete the user xfs (uid 33) for the user www-data (the same uid 33 in Debian) that will be created soon

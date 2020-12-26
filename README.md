@@ -1,14 +1,14 @@
-# Docker image for nginx
+# Docker image for NGINX
 
 [![](https://dockeri.co/image/bohan/nginx)](https://hub.docker.com/r/bohan/nginx)
 
 ## Info
 
- * Based on [the official nginx Docker image](https://github.com/nginxinc/docker-nginx/blob/594ce7a8bc26c85af88495ac94d5cd0096b306f7/mainline/alpine/Dockerfile)
+ * Based on [the official NGINX Docker image](https://github.com/nginxinc/docker-nginx/blob/594ce7a8bc26c85af88495ac94d5cd0096b306f7/mainline/alpine/Dockerfile)
  * Using [s6-overlay](https://github.com/just-containers/s6-overlay) for a correct init process and automatic log rotation
- * nginx 1.19.5
+ * Latest mainline version of NGINX
  * Alpine Linux 3.12
- * OpenSSL 1.1.1g with TLS 1.3 support
+ * OpenSSL 1.1.1 with TLS 1.3 support
  * [ngx_brotli](https://github.com/google/ngx_brotli/tree/9aec15e2aa6feea2113119ba06460af70ab3ea62) is available as dynamic modules
  * [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module/tree/3.3) is available as dynamic module
 
